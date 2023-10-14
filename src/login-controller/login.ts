@@ -73,8 +73,6 @@ class Login {
         process.env.SECRET_KEY as string
       ) as tokenType;
 
-      await userController.getAllPosts(req, res, verifyJwt.id);
-
       const user = await prisma.user.findUnique({
         where: { id: verifyJwt.id },
       });

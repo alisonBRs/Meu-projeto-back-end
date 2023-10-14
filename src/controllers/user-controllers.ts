@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { userService } from "../services/user-services";
 import { prisma } from "../interface/default-prisma/prisma";
+import { customRequest } from "../middlewares/authMiddleware";
 
 class UserControllers {
   async getUser(req: Request, res: Response) {
@@ -54,11 +55,11 @@ class UserControllers {
     }
   }
 
-  async getAllPosts(req: Request, res: Response, userId: string) {
-    const response = await userService.getAllPosts(userId);
+  async getAllPosts(req: Request, res: Response) {
+    const userId = (req as customRequest).userId;
 
+    const response = await userService.getAllPosts(userId as string);
     const havePosts = response.filter((post) => post.title && post.description);
-
     return res.json(havePosts);
   }
 
