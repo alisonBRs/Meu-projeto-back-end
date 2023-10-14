@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    ports:
+      - "5000:5432"
+    environment:
+      - POSTGRESQL_USERNAME=alison
+      - POSTGRESQL_PASSWORD=pass123
+      - POSTGRESQL_DATABASE=user_login
+    volumes:
+      - "./database:/bitnami/postgresql"
