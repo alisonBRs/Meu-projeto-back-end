@@ -12,7 +12,7 @@
     "typescript": "^5.2.2"
   },
   "scripts": {
-    "dev": "nodemon ./src/server.ts"
+    "dev": "tsx watch ./src/server.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -21,6 +21,7 @@
     "@types/jsonwebtoken": "^9.0.2",
     "prisma": "^5.2.0",
     "ts-node": "^10.9.1",
+    "tsx": "^3.13.0",
     "uuid": "^9.0.0"
   }
 }

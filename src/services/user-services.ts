@@ -1,6 +1,9 @@
 import { prisma } from "../interface/default-prisma/prisma";
 import { userType } from "../interface/user-type";
-
+import type { Post } from "@prisma/client";
+interface ResponsePosts extends Post {
+  userLikedPost?: boolean;
+}
 type postServiceType = {
   title: string;
   description: string;
@@ -58,18 +61,8 @@ class UserServices {
     });
   }
 
-  async getAllPosts(loggedUser: string) {
-    const postsLiked = await prisma.likes.findMany({
-      where: { userId: loggedUser },
-    });
-
-    await prisma.post.updateMany({
-      data: {
-        loggedUserLiked: !!postsLiked,
-      },
-    });
-
-    const response = await prisma.post.findMany({
+  async getAllPosts(loggedUserId: string) {
+    const response: ResponsePosts[] = await prisma.post.findMany({
       include: {
         user: true,
         _count: {
@@ -79,6 +72,19 @@ class UserServices {
         },
       },
     });
+
+    for (const post of response) {
+      const index = response.findIndex((item: any) => item.id === post.id);
+      const userLikedPost = await prisma.likes.findUnique({
+        where: {
+          postId_userId: {
+            postId: post.id,
+            userId: loggedUserId,
+          },
+        },
+      });
+      response[index].userLikedPost = !!userLikedPost;
+    }
 
     return response;
   }

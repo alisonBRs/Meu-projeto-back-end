@@ -2,6 +2,25 @@ import { Request, Response } from "express";
 import { likesService } from "../services/likes-service";
 import { prisma } from "../interface/default-prisma/prisma";
 
+function validateFields({ verifyUserId, verifyPostId, userId, postId }: any) {
+  if (!verifyUserId) {
+    return { error: "user id not founded" };
+  }
+
+  if (!verifyPostId) {
+    return { error: "post id not founded" };
+  }
+
+  if (!userId) {
+    //falsy 0 null undefined "" false
+    return { error: "user id is missing" };
+  }
+
+  if (!postId) {
+    return { error: "post id is missing" };
+  }
+}
+
 class Likes {
   async addLikes(req: Request, res: Response) {
     const userId = req.params.userId;
@@ -14,19 +33,18 @@ class Likes {
       where: { id: postId },
     });
 
-    if (!verifyUserId) {
-      return res.status(401).json({ error: "user id not founded" });
+    const isValid = validateFields({
+      verifyPostId,
+      verifyUserId,
+      userId,
+      postId,
+    });
+
+    if (isValid?.error) {
+      return res.status(400).json(isValid);
     }
 
-    if (!verifyPostId) {
-      return res.status(401).json({ error: "post id not founded" });
-    }
-
-    if (userId === "") {
-      return res.status(401).json({ error: "user id is missing" });
-    }
-
-    if (postId === "") {
+    if (!postId) {
       return res.status(401).json({ error: "post id is missing" });
     }
 
@@ -61,20 +79,15 @@ class Likes {
       where: { id: postId },
     });
 
-    if (!verifyUserId) {
-      return res.status(401).json({ error: "user id not founded" });
-    }
+    const isValid = validateFields({
+      verifyPostId,
+      verifyUserId,
+      userId,
+      postId,
+    });
 
-    if (!verifyPostId) {
-      return res.status(401).json({ error: "post id not founded" });
-    }
-
-    if (userId === "") {
-      return res.status(401).json({ error: "user id is missing" });
-    }
-
-    if (postId === "") {
-      return res.status(401).json({ error: "post id is missing" });
+    if (isValid?.error) {
+      return res.status(400).json(isValid);
     }
 
     const alreadyExists = await prisma.likes.findUnique({
