@@ -7,13 +7,10 @@ export interface customRequest extends Request {
 }
 
 export async function authMiddleware(
-  err: any,
   req: Request,
   res: Response,
-
   next: NextFunction
 ) {
-  console.log("err", err);
   try {
     const { authorization } = req.headers;
 

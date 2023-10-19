@@ -12,7 +12,6 @@ function validateFields({ verifyUserId, verifyPostId, userId, postId }: any) {
   }
 
   if (!userId) {
-    //falsy 0 null undefined "" false
     return { error: "user id is missing" };
   }
 
