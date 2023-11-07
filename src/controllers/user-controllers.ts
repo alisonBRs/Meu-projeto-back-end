@@ -63,6 +63,18 @@ class UserControllers {
     return res.json(havePosts);
   }
 
+  async getUniqueUserPosts(req: Request, res: Response) {
+    const userId = (req as customRequest).userId;
+
+    const response = await userService.getUniqueUserPosts(userId);
+
+    if (!response) {
+      return res.status(401).json({ error: "User not founded" });
+    }
+
+    return res.json(response);
+  }
+
   async createPost(req: Request, res: Response) {
     const id = req.params.id;
     const { title, description } = req.body;

@@ -101,6 +101,13 @@ class UserServices {
       },
     });
   }
+
+  async getUniqueUserPosts(id: string) {
+    return await prisma.post.findMany({
+      where: { userId: id },
+      include: { user: true },
+    });
+  }
 }
 
 export const userService = new UserServices();

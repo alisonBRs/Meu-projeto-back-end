@@ -21,6 +21,11 @@ export class Route implements routeType {
     this.route.get("/post/:userId/:postId", userController.getOnePost);
     this.route.get("/posts", authMiddleware, userController.getAllPosts);
     this.route.post("/post/:id", userController.createPost);
+    this.route.get(
+      "/user-posts",
+      authMiddleware,
+      userController.getUniqueUserPosts
+    );
 
     this.route.post("/like/:userId/:postId", likes.addLikes);
     this.route.post("/dislike/:userId/:postId", likes.removeLike);
